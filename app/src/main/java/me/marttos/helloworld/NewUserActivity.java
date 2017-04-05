@@ -1,6 +1,8 @@
 package me.marttos.helloworld;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +15,7 @@ import me.marttos.helloworld.model.helper.UserHelper;
 public class NewUserActivity extends AppCompatActivity {
 
     protected Button btnSave;
+    protected SharedPreferences sharedPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +36,24 @@ public class NewUserActivity extends AppCompatActivity {
 
                 intent.putExtra("email", user.email);
 
-                UserHelper.INSTANCE.add(user.email, user);
+                user.save();
+
+                saveSession(user.email);
 
                 NewUserActivity.this.startActivity(intent);
             }
         });
+
+        sharedPrefs = getApplicationContext().getSharedPreferences(
+                "session", Context.MODE_PRIVATE);
+    }
+
+    private void saveSession(String email)
+    {
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+
+        editor.putBoolean("logged", true);
+        editor.putString("email", email);
+        editor.commit();
     }
 }

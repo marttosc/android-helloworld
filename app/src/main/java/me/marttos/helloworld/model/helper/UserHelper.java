@@ -14,7 +14,12 @@ public enum UserHelper {
         return users.get(email);
     }
 
-    public void add(String email, User user) {
-        users.put(email, user);
+    public void add(User user) {
+        users.put(user.email, user);
+    }
+
+    public User getUserByEmail(String email)
+    {
+        return users.get(email);
     }
 }

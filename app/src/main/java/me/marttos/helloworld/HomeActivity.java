@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import me.marttos.helloworld.model.User;
 import me.marttos.helloworld.model.helper.UserHelper;
 
 public class HomeActivity extends AppCompatActivity {
@@ -14,10 +15,19 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        Intent intent = getIntent();
+        String email_logged = getIntent().getStringExtra("email");
 
-        String email_logged = intent.getStringExtra("email");
+        User user = UserHelper.INSTANCE.find(email_logged);
 
-        ((TextView) findViewById(R.id.lblHomeNome)).setText(UserHelper.INSTANCE.find(email_logged).name);
+        if (user == null)
+        {
+            Intent intent = new Intent(this, MainActivity.class);
+
+            startActivity(intent);
+        }
+        else
+        {
+            ((TextView) findViewById(R.id.lblHomeNome)).setText(user.name);
+        }
     }
 }
