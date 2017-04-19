@@ -27,4 +27,9 @@ public class User
 
         return dao.getModel(email);
     }
+
+    public static boolean exists(Context context, String email)
+    {
+        return find(context, email) != null;
+    }
 }

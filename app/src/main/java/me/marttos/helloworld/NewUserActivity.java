@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.Date;
 
@@ -37,13 +38,18 @@ public class NewUserActivity extends AppCompatActivity {
                 user.password = ((EditText) findViewById(R.id.txtSenha)).getText().toString();
                 user.created = new Date();
 
-                intent.putExtra("email", user.email);
+                if (User.exists(getApplicationContext(), user.email))
+                {
+                    Toast.makeText(NewUserActivity.this, "E-mail já cadastrado.", Toast.LENGTH_SHORT).show();
+                } else {
+                    intent.putExtra("email", user.email);
 
-                user.save(getApplicationContext());
+                    user.save(getApplicationContext());
 
-                saveSession(user.email);
+                    saveSession(user.email);
 
-                NewUserActivity.this.startActivity(intent);
+                    NewUserActivity.this.startActivity(intent);
+                }
             }
         });
 
