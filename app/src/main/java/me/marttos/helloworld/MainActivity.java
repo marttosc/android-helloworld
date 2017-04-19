@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import me.marttos.helloworld.model.User;
-import me.marttos.helloworld.model.helper.UserHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,14 +54,15 @@ public class MainActivity extends AppCompatActivity {
         String email = ((EditText) findViewById(R.id.txtEmail)).getText().toString();
         String senha = ((EditText) findViewById(R.id.txtSenha)).getText().toString();
 
-        if (User.login(email, senha) != null)
-        {
+        User user = User.find(getApplicationContext(), email);
+
+        if (user == null) {
+            Toast.makeText(MainActivity.this, "Usuário não encontrado.", Toast.LENGTH_SHORT).show();
+        } else if (!user.password.contentEquals(senha)) {
+            Toast.makeText(MainActivity.this, "Autenticação inválida.", Toast.LENGTH_SHORT).show();
+        } else {
             saveSession(email);
             goHome();
-        }
-        else
-        {
-            Toast.makeText(MainActivity.this, "Email não cadastrado.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -79,11 +79,15 @@ public class MainActivity extends AppCompatActivity {
     {
         String email = sharedPrefs.getString("email", "");
 
-        Intent intent = new Intent(this, HomeActivity.class);
+        if (!email.contentEquals(""))
+        {
+            Intent intent = new Intent(this, HomeActivity.class);
 
-        intent.putExtra("email", email);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.putExtra("email", email);
 
-        startActivity(intent);
+            startActivity(intent);
+        }
     }
 
     private void goRegister()

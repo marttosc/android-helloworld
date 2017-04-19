@@ -1,30 +1,30 @@
 package me.marttos.helloworld.model;
 
-import me.marttos.helloworld.model.helper.UserHelper;
+import android.content.Context;
+
+import java.util.Date;
+
+import me.marttos.helloworld.dao.UserDAO;
 
 public class User
 {
+    public Long id;
     public String name;
     public String email;
     public String password;
+    public Date created;
 
-    public static User login(String email, String password)
+    public void save(Context context)
     {
-        User user = UserHelper.INSTANCE.getUserByEmail(email);
+        UserDAO dao = new UserDAO(context);
 
-        if (user != null)
-        {
-            if (user.password.contentEquals(password))
-            {
-                return user;
-            }
-        }
-
-        return null;
+        dao.insert(this);
     }
 
-    public void save()
+    public static User find(Context context, String email)
     {
-        UserHelper.INSTANCE.add(this);
+        UserDAO dao = new UserDAO(context);
+
+        return dao.getModel(email);
     }
 }

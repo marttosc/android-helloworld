@@ -9,8 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.util.Date;
+
 import me.marttos.helloworld.model.User;
-import me.marttos.helloworld.model.helper.UserHelper;
 
 public class NewUserActivity extends AppCompatActivity {
 
@@ -27,16 +28,18 @@ public class NewUserActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(NewUserActivity.this, HomeActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
                 User user = new User();
 
                 user.name = ((EditText) findViewById(R.id.txtNome)).getText().toString();
                 user.email = ((EditText) findViewById(R.id.txtEmail)).getText().toString();
                 user.password = ((EditText) findViewById(R.id.txtSenha)).getText().toString();
+                user.created = new Date();
 
                 intent.putExtra("email", user.email);
 
-                user.save();
+                user.save(getApplicationContext());
 
                 saveSession(user.email);
 
